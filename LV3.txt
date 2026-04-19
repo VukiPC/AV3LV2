@@ -1,0 +1,66 @@
+ZAD2 public abstract class Oblik {
+    public abstract double IzracunajPovrsinu();
+}
+
+public class Krug : Oblik {
+    public double R { get; set; }
+    public override double IzracunajPovrsinu() => R * R * Math.PI;
+}
+
+public class Pravokutnik : Oblik {
+    public double A, B;
+    public override double IzracunajPovrsinu() => A * B;
+}
+
+ZAD 3 A)B)
+public abstract class Oblik {
+    public static int Brojac = 0; // Zadatak 4a
+
+    public Oblik() { Brojac++; }
+    ~Oblik() { Brojac--; Console.WriteLine("Destruktor pozvan."); }
+    public abstract void Crtaj();
+}
+
+public class Krug : Oblik {
+    public double R { get; set; }
+    public Krug(double r) { R = r; }
+    public override void Crtaj() => Console.WriteLine("Crtam krug.");
+}
+
+ZAD3C) Da, apsolutno.
+
+Obrazloženje: U geometrijskim klasama, geometrijska ispravnost (validnost) je ključna. Krug s radijusom -5 ili Pravokutnik sa stranicama 0 nisu fizički mogući. isValid() sprječava da sustav radi s neispravnim podacima koji bi doveli do matematičkih grešaka (npr. dijeljenje s nulom ili korjenovanje negativnog broja). 
+
+ZAD4 a) Već uključen u gornji kod (public static int Brojac). Svaki put kad pozovemo konstruktor (base()), brojač se povećava.
+b) public class Elipsa : Oblik {
+    private double _a, _b; // Poluosi
+    public Elipsa(double a, double b) { _a = a; _b = b; }
+    public override void Crtaj() { Console.WriteLine($"Elipsa s poluosi a={a} i b={b}."); }
+    public double Povrsina() => _a * _b * Math.PI;
+    public void Opseg() => Console.WriteLine("Opseg elipse!");
+}
+c) public class JednakokracanTrokut : Trokut {
+    public double A { get; set; } // krak
+    public double B { get; set; } // osnovica
+
+    private double Visina() {
+        return Math.Sqrt(Math.Pow(A, 2) - Math.Pow(B / 2, 2));
+    }
+
+    public bool isValid() {
+        return (2 * A > B); // Trokuev nejednakost
+    }
+
+    public double Povrsina() => (B * Visina()) / 2;
+}
+d) // Kreiramo listu koja prima ISKLJUČIVO tip Trokut
+List<Trokut> trokuti = new List<Trokut>();
+
+// Možemo dodati bilo koji trokut
+trokuti.Add(new JednakokracanTrokut(5, 4));
+trokuti.Add(new PravokutniTrokut(3, 4, 5));
+
+// Pokušaj dodavanja kruga ovdje bi uzrokovao grešku pri prevođenju (Compile-time error)
+// trokuti.Add(new Krug(5)); // OVO NEĆE RADITI, što je i bio cilj!
+
+Savjet za kraj: Ako te profesor pita zašto smo koristili private Visina(), reci da je to primjer skrivanja informacija (Information Hiding) – korisnik klase ne treba znati kako računamo visinu, on samo želi površinu.
